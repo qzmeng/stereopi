@@ -1,126 +1,222 @@
 #!/usr/bin/python
-# Example using a character LCD plate.
-import math
-import time,os
-
-import Adafruit_CharLCD as LCD
 
 
-# Initialize the LCD using the pins 
-lcd = LCD.Adafruit_CharLCDPlate()
-lcd.set_color(0,0,0)
-lcd.clear()
-lcd.enable_display(True)
-lcd.show_cursor(False)
-lcd.message('Ready')
+import time,os,sys
+
+
+class display():
+    def light(self,value):
+        pass
+
+    def button_pressed(self,a):
+        print "pressed button %i"%a
+
+    def button_released(self,a):
+        #print "released button %i"%a
+        pass
+    
+
+
+class console(display):
+    # Regular console which works anywhere
+    def __init__(self):
+        import curses
+        self.scr=curses.initscr()
+        self.scr.keypad(1)
+        print "Using console display."
+        self.LEFT=260
+        self.RIGHT=261
+        self.SELECT=10
+        
+    def clear(self):
+        self.scr.clear()
+        self.scr.refresh()
+        
+    def message(self,text):
+        try:
+            self.scr.addstr("%s\n"%text)
+        except Exception:
+            print text
+
+    def wait_for_button(self):
+        return self.scr.getch()
+
+    def teardown(self):
+        import curses
+        self.scr.keypad(0)
+        curses.endwin()
+        
+class lcd(display):
+    # Adafruit LCD for Raspberry Pi
+    def __init__(self):
+        import Adafruit_CharLCD as LCD
+        self.lcd = LCD.Adafruit_CharLCDPlate()
+        self.buttons = ( LCD.SELECT,
+                    LCD.LEFT,
+                    LCD.UP,
+                    LCD.DOWN,
+                    LCD.RIGHT)
+        self.lcd.set_color(0, 0, 0)
+        self.lcd.clear()
+        self.lcd.enable_display(True)
+        self.lcd.show_cursor(False)
+        self.lcd.message('Ready')
+
+        self.last_state={}
+        
+        self.LEFT=LCD.DOWN
+        self.RIGHT=LCD.RIGHT
+        self.SELECT=LCD.SELECT
+        
+    def light(self,value):
+        self.lcd.set_color(value,value,value)
+
+    def clear(self):
+        self.lcd.clear()
+        
+    def message(self,text):
+        self.lcd.message(text)
+
+    def wait_for_button(self):
+        print 'Waiting for button pressed'
+        while True:
+            # Loop through each button and check if it is pressed.
+            a={}
+            for button in self.buttons:
+                if self.lcd.is_pressed(button):
+                    a[button]=True
+                else:
+                    a[button]=False
+            
+            if self.last_state != a:
+                self.last_state=a
+                for i in a:
+                    if a[i]==True:
+                        self.button_pressed(i)
+                        return i
+                    else:
+                        self.button_released(i)
+            time.sleep(0.1)
+    
+
+    def teardown(self):
+        self.light(0)
+        self.clear()
+
+try:
+    disp = lcd()
+except Exception:
+    disp = console()
+
+rootdir = 'music'
+
+def walkdir():
+    filelist={}
+
+    for subdir, dirs, files in os.walk(rootdir):
+        for file in files:
+            try:
+                filelist[file]=('play',os.path.join(subdir, file))
+            except Exception:
+                pass
+
+    filelist['* Up']=('menu_up')
+
+    return filelist
+
 
 stations = {#'Radio 1':'http://www.bbc.co.uk/radio/listen/live/r1_aaclca.pls',  
-            'BBC Radio 1':'http://sc1.tyo.llnw.net/stream/bbcmedia_radio1_mf_p',
-            'BBC Radio 2':'http://sc1.tyo.llnw.net/stream/bbcmedia_radio2_mf_p',
+            'BBC Radio 1':('play','http://sc1.tyo.llnw.net/stream/bbcmedia_radio1_mf_p'),
+            'BBC Radio 2':('play','http://sc1.tyo.llnw.net/stream/bbcmedia_radio2_mf_p'),
 #            'Radio 2':'http://www.bbc.co.uk/radio/listen/live/r2_aaclca.pls',
-            'BBC Radio 3':'http://www.bbc.co.uk/radio/listen/live/r3_aaclca.pls',
-            'BBC Radio 4':'http://www.bbc.co.uk/radio/listen/live/r4_aaclca.pls',
-            'BBC Radio 5 Live':'http://www.bbc.co.uk/radio/listen/live/r5l_aaclca.pls',
-#            'Radio 6 Music':'http://www.bbc.co.uk/radio/listen/live/r6_aaclca.pls',
-            'BBC Radio 6 Music':'http://sc1.tyo.llnw.net/stream/bbcmedia_6music_mf_p',
-            'BBC Radio Scotland':'http://sc1.tyo.llnw.net/stream/bbcmedia_scotlandfm_mf_p',
-            'Heart London':'http://media-ice.musicradio.com/HeartLondon',
-            'Jazz FM':'http://adsi-e-02-boh.sharp-stream.com/jazzfmmobile.mp3',
-            'NHK FM':' -cache 250  -playlist http://mfile.akamai.com/129933/live/reflector:46051.asx',
-            'EXIT':'EXIT',
-            'SHUTDOWN':'SHUTDOWN'}
+            'BBC Radio 3':('play','http://sc1.tyo.llnw.net/stream/bbcmedia_radio3_mf_p'),
+            'BBC Radio 4':('play','http://sc1.tyo.llnw.net/stream/bbcmedia_radio4fm_mf_p'),
+            'BBC Radio 5 Live':('play','http://sc1.tyo.llnw.net/stream/bbcmedia_radio5live_mf_p'),
+            'BBC Radio 6 Music':('play','http://sc1.tyo.llnw.net/stream/bbcmedia_6music_mf_p'),
+            'BBC Radio Scotland':('play','http://sc1.tyo.llnw.net/stream/bbcmedia_scotlandfm_mf_p'),
+            'Heart London':('play','http://media-ice.musicradio.com/HeartLondon'),
+            'Jazz FM':('play','http://adsi-e-02-boh.sharp-stream.com/jazzfmmobile.mp3'),
+            'NHK FM':('play','http://mfile.akamai.com/129933/live/reflector:46051.asx','-cache 250 -playlist'),
+            '* MP3s':('menu',
+                         walkdir()),
+            '** EXIT':('EXIT'),
+            '** SHUTDOWN':('SHUTDOWN')}
 
-last_state={}
 
-def wait_for_button():
-    global last_state
 
-    buttons = ( LCD.SELECT,
-                LCD.LEFT,
-                LCD.UP,
-                LCD.DOWN,
-                LCD.RIGHT)
-    print 'Waiting for button pressed'
-    while True:
-        # Loop through each button and check if it is pressed.
-        a={}
-	for button in buttons:
-            if lcd.is_pressed(button):
-                a[button]=True
-            else:
-                a[button]=False
-        
-        if last_state != a:
-            last_state=a
-            for i in a:
-                if a[i]==True:
-                    button_pressed(i)
-                    return i
-                else:
-                    button_released(i)
-        time.sleep(0.1)
+class playerClass():
     
-def button_pressed(a):
-    print "pressed button %i"%a
+    def __init__(self):
+        self.state='stopped'
+        self.contents=''
+        
+    def play(self,entry,description):
+        self.stop()
+        self.state='playing'
+        self.contents=description
 
-def button_released(a):
-    #print "released button %i"%a
-    pass
+        if len(entry)==3:
+            cmd,url,opts=entry
+        if len(entry)==2:
+            cmd,url=entry
+            opts=''
+        os.system("mplayer %s \"%s\" &"%(opts,url))
+    def get_state(self):
+        return self.state,self.contents
+    def stop(self):
+        if self.state=='playing': os.system("killall mplayer")
+        self.state='stopped'
 
-def radio_menu_draw_screen(pos,message="Choose station"):
-    lcd.set_color(1,1,1)
-    lcd.clear()
-    lcd.message("%s\n%s"%(stations.keys()[pos],message))
+def radio_menu_draw_screen(entry,message="Choose station",player=None):
+    if player.get_state()==('playing',entry):
+        disp.light(0)
+        message='Now playing'
+    else:
+        disp.light(1)
+    disp.clear()
+    disp.message("%s\n%s"%(entry,message))
+    
 
-def radio_menu():
+def radio_menu(menuentries,player):
     position=0
 
-    radio_menu_draw_screen(position)
     while True:
-        print position
-        but=wait_for_button()
-        if but==LCD.DOWN:
+        menulist=menuentries.keys()
+        menulist.sort()
+        radio_menu_draw_screen(menulist[position],message="Choose station",player=player)
+        but=disp.wait_for_button()
+        if but==disp.RIGHT:
             position=position+1
-            if position > len(stations)-1: position=0
-            radio_menu_draw_screen(position)
-        elif but==LCD.RIGHT:
+            if position > len(menulist)-1: position=0
+        elif but==disp.LEFT:
             position=position-1
-            if position < 0: position=len(stations)-1
-            radio_menu_draw_screen(position)
-#        elif but==LCD.LEFT:
-#            os.system("amixer set 'Playback Digital' 5-")
-#            radio_menu_draw_screen(position,"Volume down")
-#        elif but==LCD.RIGHT:
-#            os.system("amixer set 'Playback Digital' 5+")
-#            radio_menu_draw_screen(position,"Volume up")
+            if position < 0: position=len(menulist)-1
+        elif but==disp.SELECT:
+            radio_menu_select(menuentries[menulist[position]], menulist[position], player)
+            if menuentries[menulist[position]]=='menu_up': break
 
-
-        elif but==LCD.SELECT:
-            play_name=stations.keys()[position]
-            play_url=stations[play_name]
-            if (play_name=="EXIT" or play_name=="SHUTDOWN"): break
-            play(play_name,play_url)
         else:
-            print "whoops another button %i" % but
+            print "whoops another button %s" % but
     
-    lcd.clear()
-    lcd.set_color(0,0,0)
-    os.system("killall mplayer")
 
-    if play_name=="SHUTDOWN":
-        lcd.message("Shutting down...")
+def radio_menu_select(entry,description,player):
+    print "selected %s"%str(entry)
+
+    if entry[0]=='play': player.play(entry,description)
+
+    if entry[0]=='menu': radio_menu(entry[1],player)
+    
+    if entry=='EXIT' or entry=='SHUTDOWN':
+        disp.teardown()
+        player.stop()
+
+    if entry=="SHUTDOWN":
+        disp.message("Shutting down...")
         os.system("sudo /sbin/shutdown -h now")
 
+    if entry=='EXIT' or entry=='SHUTDOWN':
+        sys.exit(0)
 
-def play(name,url):
-    lcd.set_color(0,0,0)
-    os.system("killall mplayer")
-    lcd.clear()
-    lcd.message("%s\nNow playing"%name)
-    if type(url)==type('str'):
-        os.system("mplayer %s &"%url)
-    else:
-        os.system("%s &"%url[1])
-    #os.system("vlc --no-interact %s &"%url)
 
-radio_menu()
+
+radio_menu(stations,playerClass())
