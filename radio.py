@@ -113,36 +113,47 @@ rootdir = 'music'
 def walkdir():
     filelist={}
 
-    for subdir, dirs, files in os.walk(rootdir):
-        for file in files:
-            try:
-                filelist[file]=('play',os.path.join(subdir, file))
-            except Exception:
-                pass
+    root_paths=os.listdir(rootdir)
+    root_paths.sort()
+    for p in root_paths:
+        dirpath=os.path.join(rootdir, p)
+        if os.path.isdir(dirpath):
+            subdir=os.listdir(dirpath)
+            subdir.sort()
+            subdir=[os.path.join(dirpath,i) for i in subdir]
+            subdfilelist="'"+"' '".join(subdir)+"'" 
+            filelist[p]=('play',subdfilelist)
 
     filelist['* Up']=('menu_up')
 
     return filelist
 
-
-stations = {#'Radio 1':'http://www.bbc.co.uk/radio/listen/live/r1_aaclca.pls',  
-            'BBC Radio 1':('play','http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p'),
-            'BBC Radio 2':('play','http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio2_mf_p'),
-#            'Radio 2':'http://www.bbc.co.uk/radio/listen/live/r2_aaclca.pls',
-            'BBC Radio 3':('play','http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio3_mf_p'),
-            'BBC Radio 4':('play','http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4fm_mf_p'),
-            'BBC Radio 5 Live':('play','http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio5live_mf_p'),
-            'BBC Radio 6 Music':('play','http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p'),
-            'BBC Radio Scotland':('play','http://bbcmedia.ic.llnwd.net/stream/bbcmedia_scotlandfm_mf_p'),
-            'Heart London':('play','http://media-ice.musicradio.com/HeartLondon'),
-            'Jazz FM':('play','http://adsi-e-02-boh.sharp-stream.com/jazzfmmobile.mp3'),
-            'NHK FM':('play','http://mfile.akamai.com/129933/live/reflector:46051.asx','-cache 250 -playlist'),
-            'WFMU New Jersey':('play','http://wfmu.org/wfmu.pls'),    
+stations = {  
+            'BBC Radio 1':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_one.m3u8'),
+            'BBC Radio 1 Relax':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_one_relax.m3u8'),
+            'BBC Radio 2':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_two.m3u8'),
+            'BBC Radio 3':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_three.m3u8'),
+            'BBC Radio 4':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_fourfm.m3u8'),
+            'BBC Radio 5 Live':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_five_live.m3u8'),
+            'BBC Radio 6 Music':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_6music.m3u8'),
+            'BBC Radio Scotland':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_scotland_fm.m3u8'),
+            #'Heart London':('play','http://media-ice.musicradio.com/HeartLondon'),
+            'Jazz FM':('play','http://edge-bauerall-01-gos2.sharp-stream.com/jazzhigh.aac'),
+            'WFMU New Jersey':('play','http://stream0.wfmu.org/freeform-high.aac'),
             '* MP3s':('menu',
                          walkdir()),
             '** EXIT':('EXIT'),
             '** SHUTDOWN':('SHUTDOWN')}
 
+
+
+# The above streams are restricted to the UK. For the international stream when available,
+# replace /uk/ with /nonuk/ and /sbr_med/ with /sbr_low/ or /sbr_vlow/.
+# Different bitrates are available by replacing /sbr_med/ :
+# /sbr_vlow/ = 48k /sbr_low/ = 96k
+# UK only: /sbr_med/ = 128k /sbr_high/ = 320k
+
+# e.g.  http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/ak/bbc_6music.m3u8
 
 
 class playerClass():
@@ -161,7 +172,7 @@ class playerClass():
         if len(entry)==2:
             cmd,url=entry
             opts=''
-        os.system("mplayer %s \"%s\" &"%(opts,url))
+        os.system("mplayer %s %s &"%(opts,url))
     def get_state(self):
         return self.state,self.contents
     def stop(self):
