@@ -147,6 +147,8 @@ stations = {
             'SomaFM Drone Zone':('play','http://somafm.com/nossl/dronezone130.pls'),
             'SomaFM Groove Salad':('play','http://somafm.com/nossl/groovesalad130.pls'),
             'SomaFM Space Station':('play','http://somafm.com/nossl/spacestation130.pls'),
+            'Venice Classic':('play','https://www.veniceclassicradio.eu/live1/128.pls'),
+            'Swiss Classic':('play','https://stream.srg-ssr.ch/rsc_de/aacp_96.m3u'),
             '* MP3s':('menu',
                          walkdir()),
             '** EXIT':('EXIT'),
