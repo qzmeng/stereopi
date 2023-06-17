@@ -149,6 +149,7 @@ stations = {
             'SomaFM Space Station':('play','http://somafm.com/nossl/spacestation130.pls'),
             'Venice Classic':('play','https://www.veniceclassicradio.eu/live1/128.pls'),
             'Swiss Classic':('play','https://stream.srg-ssr.ch/rsc_de/aacp_96.m3u'),
+            'Swiss Jazz':('play','https://stream.srg-ssr.ch/rsj/aacp_96.m3u'),    
             '* MP3s':('menu',
                          walkdir()),
             '** EXIT':('EXIT'),
