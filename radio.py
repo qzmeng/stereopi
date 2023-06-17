@@ -137,9 +137,16 @@ stations = {
             'BBC Radio 5 Live':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_five_live.m3u8'),
             'BBC Radio 6 Music':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_6music.m3u8'),
             'BBC Radio Scotland':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_scotland_fm.m3u8'),
-            #'Heart London':('play','http://media-ice.musicradio.com/HeartLondon'),
             'Jazz FM':('play','http://edge-bauerall-01-gos2.sharp-stream.com/jazzhigh.aac'),
             'WFMU New Jersey':('play','http://stream0.wfmu.org/freeform-high.aac'),
+            'FluxFM Berlin':('play','http://streams.fluxfm.de/live/mp3-320/audio/play.m3u'),
+            'Flux Lounge':('play','http://streams.fluxfm.de/lounge/mp3-320/audio/play.m3u'),
+            'Flux Chillhop':('play','http://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/play.m3u'),
+            'Flux Euro Jazz':('play','http://streams.fluxfm.de/Euro/mp3-320/streams.fluxfm.de/play.m3u'),
+            'SomaFM GS Classic':('play','http://somafm.com/nossl/gsclassic130.pls'),
+            'SomaFM Drone Zone':('play','http://somafm.com/nossl/dronezone130.pls'),
+            'SomaFM Groove Salad':('play','http://somafm.com/nossl/groovesalad130.pls'),
+            'SomaFM Space Station':('play','http://somafm.com/nossl/spacestation130.pls'),
             '* MP3s':('menu',
                          walkdir()),
             '** EXIT':('EXIT'),
@@ -172,11 +179,12 @@ class playerClass():
         if len(entry)==2:
             cmd,url=entry
             opts=''
-        os.system("mplayer %s %s &"%(opts,url))
+        # later versions need mplayer -allow-dangerous-playlist-parsing 
+        os.system("cvlc %s %s &"%(opts,url))
     def get_state(self):
         return self.state,self.contents
     def stop(self):
-        if self.state=='playing': os.system("killall mplayer")
+        if self.state=='playing': os.system("killall mplayer vlc")
         self.state='stopped'
 
 def radio_menu_draw_screen(entry,message="Choose station",player=None):
