@@ -129,14 +129,23 @@ def walkdir():
     return filelist
 
 stations = {  
-            'BBC Radio 1':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_one.m3u8'),
-            'BBC Radio 1 Relax':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_one_relax.m3u8'),
-            'BBC Radio 2':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_two.m3u8'),
-            'BBC Radio 3':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_three.m3u8'),
-            'BBC Radio 4':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_fourfm.m3u8'),
-            'BBC Radio 5 Live':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_five_live.m3u8'),
-            'BBC Radio 6 Music':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_6music.m3u8'),
-            'BBC Radio Scotland':('play','http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_scotland_fm.m3u8'),
+    # MPEG-DASH streams, needs VLC v3
+    # 'BBC Radio 1':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/cfs/bbc_radio_one.mpd'),
+            # 'BBC Radio 1 Relax':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/cfs/bbc_radio_one_relax.mpd'),
+            # 'BBC Radio 2':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/cfs/bbc_radio_two.mpd'),
+            # 'BBC Radio 3':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/cfs/bbc_radio_three.mpd'),
+            # 'BBC Radio 4':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/cfs/bbc_radio_fourfm.mpd'),
+            # 'BBC Radio 5 Live':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/cfs/bbc_radio_five_live.mpd'),
+            # 'BBC Radio 6 Music':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/cfs/bbc_6music.mpd'),
+            # 'BBC Radio Scotland':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/cfs/bbc_radio_scotland_fm.mpd'),
+            'BBC Radio 1':('play','http://as-hls-uk-live.akamaized.net/pool_904/live/uk/bbc_radio_one/bbc_radio_one.isml/bbc_radio_one-audio%3d128000.norewind.m3u8'),
+            'BBC Radio 1 Relax':('play','http://as-hls-uk-live.akamaized.net/pool_904/live/uk/bbc_radio_one_relax/bbc_radio_one_relax.isml/bbc_radio_one_relax-audio%3d128000.norewind.m3u8'),
+            'BBC Radio 2':('play','http://as-hls-uk-live.akamaized.net/pool_904/live/uk/bbc_radio_two/bbc_radio_two.isml/bbc_radio_two-audio%3d128000.norewind.m3u8'),
+            'BBC Radio 3':('play','http://as-hls-uk-live.akamaized.net/pool_904/live/uk/bbc_radio_three/bbc_radio_three.isml/bbc_radio_three-audio%3d320000.norewind.m3u8'),
+            'BBC Radio 4':('play','http://as-hls-uk-live.akamaized.net/pool_904/live/uk/bbc_radio_fourfm/bbc_radio_fourfm.isml/bbc_radio_fourfm-audio%3d128000.norewind.m3u8'),
+            'BBC Radio 5 Live':('play','http://as-hls-uk-live.akamaized.net/pool_904/live/uk/bbc_radio_five_live/bbc_radio_five_live.isml/bbc_radio_five_live-audio%3d128000.norewind.m3u8'),
+            'BBC Radio 6 Music':('play','http://as-hls-uk-live.akamaized.net/pool_904/live/uk/bbc_6music/bbc_6music.isml/bbc_6music-audio%3d128000.norewind.m3u8'),
+            'BBC Radio Scotland':('play','http://as-hls-uk-live.akamaized.net/pool_904/live/uk/bbc_radio_scotland_fm/bbc_radio_scotland_fm.isml/bbc_radio_scotland_fm-audio%3d128000.norewind.m3u8'),
             'Jazz FM':('play','http://edge-bauerall-01-gos2.sharp-stream.com/jazzhigh.aac'),
             'WFMU New Jersey':('play','http://stream0.wfmu.org/freeform-high.aac'),
             'FluxFM Berlin':('play','http://streams.fluxfm.de/live/mp3-320/audio/play.m3u'),
@@ -187,7 +196,7 @@ class playerClass():
             cmd,url=entry
             opts=''
         # later versions need mplayer -allow-dangerous-playlist-parsing 
-        os.system("cvlc %s %s &"%(opts,url))
+        os.system("cvlc -q %s %s 2> /dev/null&"%(opts,url))
     def get_state(self):
         return self.state,self.contents
     def stop(self):
