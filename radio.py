@@ -162,6 +162,17 @@ stations = {
             'Swiss Jazz':('play','http://stream.srg-ssr.ch/m/rsj/aacp_96'),    
             'TW Classical FM':('play','https://onair.family977.com.tw:8977/live.mp3'),
             'RTHK Radio 4':('play','http://stm.rthk.hk/radio4'),
+    #12345678901234567890
+    'Klassik Radio Nature':('play','http://stream.klassikradio.de/nature/mp3-128'),
+    'Klassik Radio Piano':('play','http://stream.klassikradio.de/piano/mp3-128'),
+    'Klassik Radio Lounge':('play','http://stream.klassikradio.de/lounge/mp3-128'),
+    'Klassik Radio Lounge Beat':('play','http://stream.klassikradio.de/lounge-beat/mp3-128'),
+    'Klassik Radio Healing':('play','http://stream.klassikradio.de/healing/mp3-128'),
+    'Klassik Radio Smooth':('play','http://stream.klassikradio.de/smooth/mp3-128'),
+    'NPO Radio 4':('play','http://icecast.omroep.nl/radio4-sb-mp3'),
+    'France Musique':('play','https://stream.radiofrance.fr/francemusique/francemusique_hifi.m3u8?id=radiofrance'),
+    'France M. Cl. Plus':('play','https://stream.radiofrance.fr/francemusiqueclassiqueplus/francemusiqueclassiqueplus_hifi.m3u8?id=radiofrance'),
+    
     
             '* MP3s':('menu',
                          walkdir()),
