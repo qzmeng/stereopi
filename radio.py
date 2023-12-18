@@ -242,7 +242,7 @@ def radio_menu_draw_screen(entry,message="Choose station",player=None):
 
 def radio_menu(menuentries,player):
     position=0
-
+    last_button=None
     while True:
         menulist=list(menuentries.keys())
         menulist.sort()
@@ -255,11 +255,15 @@ def radio_menu(menuentries,player):
             position=position-1
             if position < 0: position=len(menulist)-1
         elif but==disp.SELECT:
-            radio_menu_select(menuentries[menulist[position]], menulist[position], player)
+            if but==last_button and player.state=='playing' and not 'menu' in menuentries[menulist[position]]:
+                player.stop() # select twice, so stop
+            else:
+                radio_menu_select(menuentries[menulist[position]], menulist[position], player)
             if menuentries[menulist[position]]=='menu_up': break
 
         else:
             print ("whoops another button %s" % but)
+        last_button=but
     
 
 def radio_menu_select(entry,description,player):
