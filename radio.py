@@ -144,6 +144,7 @@ stations = {
     'BBC Radio 4':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/aks/bbc_radio_fourfm.mpd'),
     'BBC Radio 5 Live':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/aks/bbc_radio_five_live.mpd'),
     'BBC Radio 6 Music':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/aks/bbc_6music.mpd'),
+    'BBC Radio 6 Indie':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/aks/bbc_radio_six_indie_forever.mpd'),    
     'BBC Radio Scotland':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/aks/bbc_radio_scotland_fm.mpd'),
     'BBC Radio London':('play','https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/dash/uk/pc_hd_abr_v2/aks/bbc_london.mpd'),
 
@@ -222,7 +223,7 @@ class playerClass():
             cmd,url=entry
             opts=''
         # later versions need mplayer -allow-dangerous-playlist-parsing 
-        os.system("cvlc -q %s %s 2> /dev/null&"%(opts,url))
+        os.system("cvlc --adaptive-logic=highest -q %s %s 2> /dev/null&"%(opts,url))
     def get_state(self):
         return self.state,self.contents
     def stop(self):
